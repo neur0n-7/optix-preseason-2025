@@ -1,5 +1,7 @@
 package frc.robot.subsystems.swerve;
 
+import edu.wpi.first.math.geometry.Translation2d;
+
 public class SwerveConstants {
     public static final int kFrontLeftDriveMotorPort = 1;
     public static final int kFrontLeftTurningMotorPort = 2;
@@ -16,7 +18,16 @@ public class SwerveConstants {
     public static final int kBackRightTurningMotorPort = 8;
 
 
-    // Below values need to be verified
+    // Below values are test values
+
+    public static final double maxAngularSpeed = 3.0;
+    public static final double maxAngularAcceleration = 3.0;
+
+    public static final Translation2d kFrontLeftLocation  = new Translation2d(+0.3, +0.3);
+    public static final Translation2d kFrontRightLocation = new Translation2d(+0.3, -0.3);
+    public static final Translation2d kBackLeftLocation   = new Translation2d(-0.3, +0.3);
+    public static final Translation2d kBackRightLocation  = new Translation2d(-0.3, -0.3);
+
 
     public static final double kPhysicalMaxSpeedMetersPerSecond = 5;
 
@@ -31,8 +42,8 @@ public class SwerveConstants {
     public static final boolean kBackRightDriveEncoderReversed = false;
 
     public static final int kFrontLeftDriveAbsoluteEncoderPort = 0;
-    public static final int kBackLeftDriveAbsoluteEncoderPort = 2;
     public static final int kFrontRightDriveAbsoluteEncoderPort = 1;
+    public static final int kBackLeftDriveAbsoluteEncoderPort = 2;
     public static final int kBackRightDriveAbsoluteEncoderPort = 3;
 
 

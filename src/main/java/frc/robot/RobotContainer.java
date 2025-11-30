@@ -13,7 +13,6 @@ import java.util.function.DoubleSupplier;
 import edu.wpi.first.wpilibj.RobotBase;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
-
 import frc.robot.commands.drive.Drive;
 import frc.robot.commands.drive.StopDriving;
 import frc.robot.commands.elevator.GoToElevatorHeight;
@@ -88,13 +87,11 @@ public class RobotContainer {
 		m_SwerveSubsystem = new SwerveSubsystem(RobotBase.isReal());
 		m_JoystickDrive = new JoystickDrive(m_SwerveSubsystem, xSpeedSupplier, ySpeedSupplier, rotSpeedSupplier, fieldRelativeSupplier);
 		m_SwerveSubsystem.setDefaultCommand(m_JoystickDrive);
-
-
 	}
 
 	private void configureBindings() {
-		m_driverController.leftBumper().onTrue(m_Drive);
-		m_driverController.rightBumper().onTrue(m_StopDriving);
+		m_driverController.a().onTrue(m_Drive);
+		m_driverController.a().onFalse(m_StopDriving);
 
 		m_driverController.x().onTrue(m_GoToElevatorHighest);
 		m_driverController.y().onTrue(m_GoToElevatorLowest);

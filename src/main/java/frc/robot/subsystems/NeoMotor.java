@@ -1,6 +1,5 @@
 package frc.robot.subsystems;
 
-// Interface to use either real vs simulated shooter motor
 public interface NeoMotor {
 
     double getVelocity();

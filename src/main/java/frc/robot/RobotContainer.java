@@ -7,6 +7,10 @@ package frc.robot;
 import frc.robot.Constants.OperatorConstants;
 import frc.robot.commands.Autos;
 
+import java.util.function.BooleanSupplier;
+import java.util.function.DoubleSupplier;
+
+import edu.wpi.first.wpilibj.RobotBase;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
@@ -14,11 +18,15 @@ import edu.wpi.first.wpilibj2.command.button.Trigger;
 import frc.robot.commands.drive.Drive;
 import frc.robot.commands.drive.StopDriving;
 import frc.robot.commands.elevator.GoToElevatorHeight;
+import frc.robot.commands.swerve.JoystickDrive;
 import frc.robot.subsystems.drive.DriveSubsystem;
 import frc.robot.subsystems.elevator.ElevatorConstants;
 import frc.robot.subsystems.elevator.ElevatorSubsystem;
+import frc.robot.subsystems.swerve.SwerveSubsystem;
 // import frc.robot.commands.ExampleCommand;
 import frc.robot.subsystems.ExampleSubsystem;
+import frc.robot.subsystems.RealNeoMotor;
+import frc.robot.subsystems.SimNeoMotor;
 
 /**
  * This class is where the bulk of the robot should be declared. Since Command-based is a
@@ -28,14 +36,25 @@ import frc.robot.subsystems.ExampleSubsystem;
  */
 public class RobotContainer {
 	// The robot's subsystems and commands are defined here...
-	private final DriveSubsystem m_DriveSubsystem = new DriveSubsystem();
-	private final Drive m_Drive = new Drive(m_DriveSubsystem);
-	private final StopDriving m_StopDriving = new StopDriving(m_DriveSubsystem);
 
-	private final ElevatorSubsystem m_ElevatorSubsystem = new ElevatorSubsystem();
-	private final GoToElevatorHeight m_GoToElevatorHighest = new GoToElevatorHeight(m_ElevatorSubsystem, ElevatorConstants.ElevatorStates.HIGHEST);
-	private final GoToElevatorHeight m_GoToElevatorLowest = new GoToElevatorHeight(m_ElevatorSubsystem, ElevatorConstants.ElevatorStates.LOWEST);
+	private final DriveSubsystem m_DriveSubsystem; // = new DriveSubsystem();
+	private final Drive m_Drive;
+	private final StopDriving m_StopDriving;
 
+	private final ElevatorSubsystem m_ElevatorSubsystem; // = new ElevatorSubsystem();
+	private final GoToElevatorHeight m_GoToElevatorHighest;
+	private final GoToElevatorHeight m_GoToElevatorLowest;
+
+	private final SwerveSubsystem m_SwerveSubsystem;
+	private final JoystickDrive m_JoystickDrive;
+
+	private final DoubleSupplier xSpeedSupplier;
+	private final DoubleSupplier ySpeedSupplier;
+	private final DoubleSupplier rotSpeedSupplier;
+	private final BooleanSupplier fieldRelativeSupplier;
+
+	private boolean fieldRelativeToggle;
+	private boolean fieldRelativeLastState;
 
 	private final ExampleSubsystem m_exampleSubsystem = new ExampleSubsystem();
 
@@ -47,6 +66,41 @@ public class RobotContainer {
 	public RobotContainer() {
 		// Configure the trigger bindings
 		configureBindings();
+
+		if (RobotBase.isSimulation()){
+			m_DriveSubsystem = new DriveSubsystem(new SimNeoMotor());
+			m_ElevatorSubsystem = new ElevatorSubsystem(new SimNeoMotor());
+		} else {
+			m_DriveSubsystem = new DriveSubsystem(new RealNeoMotor(OperatorConstants.driveMotorCanId));
+			m_ElevatorSubsystem = new ElevatorSubsystem(new RealNeoMotor(OperatorConstants.elevatorMotorCanId));
+		}
+
+		m_GoToElevatorHighest = new GoToElevatorHeight(m_ElevatorSubsystem, ElevatorConstants.ElevatorStates.HIGHEST);
+		m_GoToElevatorLowest = new GoToElevatorHeight(m_ElevatorSubsystem, ElevatorConstants.ElevatorStates.LOWEST);
+	
+		m_Drive = new Drive(m_DriveSubsystem);
+		m_StopDriving = new StopDriving(m_DriveSubsystem);
+
+		xSpeedSupplier = () -> -m_driverController.getLeftY();
+		ySpeedSupplier = () -> -m_driverController.getLeftX();
+		rotSpeedSupplier = () -> -m_driverController.getRightX();
+
+		fieldRelativeToggle = false;
+		fieldRelativeSupplier = () -> {
+			if (m_driverController.b().getAsBoolean() && !fieldRelativeLastState) {
+				fieldRelativeToggle = !fieldRelativeToggle;
+			}
+			fieldRelativeLastState = m_driverController.b().getAsBoolean();
+			return fieldRelativeToggle;
+		};
+
+		fieldRelativeLastState = false;
+
+		m_SwerveSubsystem = new SwerveSubsystem(RobotBase.isReal());
+		m_JoystickDrive = new JoystickDrive(m_SwerveSubsystem, xSpeedSupplier, ySpeedSupplier, rotSpeedSupplier, fieldRelativeSupplier);
+		m_SwerveSubsystem.setDefaultCommand(m_JoystickDrive);
+
+
 	}
 
 	/**

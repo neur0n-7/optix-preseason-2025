@@ -1,5 +1,5 @@
 package frc.robot.commands.arm;
 
-public class GoToPosition {
+public class GoToArmPosition {
     
 }

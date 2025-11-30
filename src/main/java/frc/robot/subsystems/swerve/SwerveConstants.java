@@ -3,20 +3,6 @@ package frc.robot.subsystems.swerve;
 import edu.wpi.first.math.geometry.Translation2d;
 
 public class SwerveConstants {
-    public static final int kFrontLeftDriveMotorPort = 1;
-    public static final int kFrontLeftTurningMotorPort = 2;
-
-
-
-    public static final int kFrontRightDriveMotorPort = 3;
-    public static final int kFrontRightTurningMotorPort = 4;
-    
-    public static final int kBackLeftDriveMotorPort = 5;
-    public static final int kBackLeftTurningMotorPort = 6;
-    
-    public static final int kBackRightDriveMotorPort = 7;
-    public static final int kBackRightTurningMotorPort = 8;
-
 
     // Below values are test values
 

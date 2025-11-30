@@ -4,27 +4,26 @@
 
 package frc.robot.subsystems.drive;
 
-import com.revrobotics.spark.SparkLowLevel.MotorType;
-import com.revrobotics.spark.SparkMax;
-
 import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
+import frc.robot.subsystems.NeoMotor;
 
 public class DriveSubsystem extends SubsystemBase {
 
-	private final SparkMax motor = new SparkMax(22, MotorType.kBrushless);
+	private final NeoMotor motor; // new SparkMax(22, MotorType.kBrushless);
     private final PIDController pid = new PIDController(0.1, 0.0, 0.0);
 
     private double setpoint = 0.0;
 	private double simulatedVoltage = 0.0;
 
-	public DriveSubsystem() {
+	public DriveSubsystem(NeoMotor motor) {
 		pid.setTolerance(0.05);
+		this.motor = motor;
+
 	}
 
-	// set voltage WITHOUT pid
-	public void setMotorVoltage(double volts) {
+	public void setMotorVoltage(double volts){
 		motor.setVoltage(volts);
 	}
 

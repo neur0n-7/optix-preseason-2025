@@ -1,5 +1,7 @@
 package frc.robot.subsystems.swerve;
 
+import java.lang.constant.Constable;
+
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.kinematics.SwerveDriveKinematics;
@@ -7,6 +9,8 @@ import edu.wpi.first.math.kinematics.SwerveDriveOdometry;
 import edu.wpi.first.math.kinematics.SwerveModuleState;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
+import frc.robot.Constants;
+import frc.robot.Constants.OperatorConstants;
 import edu.wpi.first.math.kinematics.SwerveModulePosition;
 
 
@@ -35,8 +39,8 @@ public class SwerveSubsystem extends SubsystemBase{
 
         if (isReal){
             frontLeft = new SwerveModuleReal(
-                SwerveConstants.kFrontLeftDriveMotorPort,
-                SwerveConstants.kFrontLeftTurningMotorPort,
+                OperatorConstants.kFrontLeftDriveMotorPort,
+                OperatorConstants.kFrontLeftTurningMotorPort,
                 SwerveConstants.kFrontLeftDriveEncoderReversed,
                 SwerveConstants.kFrontLeftTurningEncoderReversed,
                 SwerveConstants.kFrontLeftDriveAbsoluteEncoderPort,
@@ -45,8 +49,8 @@ public class SwerveSubsystem extends SubsystemBase{
             );
 
             frontRight = new SwerveModuleReal(
-                SwerveConstants.kFrontRightDriveMotorPort,
-                SwerveConstants.kFrontRightTurningMotorPort,
+                OperatorConstants.kFrontRightDriveMotorPort,
+                OperatorConstants.kFrontRightTurningMotorPort,
                 SwerveConstants.kFrontRightDriveEncoderReversed,
                 SwerveConstants.kFrontRightTurningEncoderReversed,
                 SwerveConstants.kFrontRightDriveAbsoluteEncoderPort,
@@ -55,8 +59,8 @@ public class SwerveSubsystem extends SubsystemBase{
             );
 
             backLeft = new SwerveModuleReal(
-                SwerveConstants.kBackLeftDriveMotorPort,
-                SwerveConstants.kBackLeftTurningMotorPort,
+                OperatorConstants.kBackLeftDriveMotorPort,
+                OperatorConstants.kBackLeftTurningMotorPort,
                 SwerveConstants.kBackLeftDriveEncoderReversed,
                 SwerveConstants.kBackLeftTurningEncoderReversed,
                 SwerveConstants.kBackLeftDriveAbsoluteEncoderPort,
@@ -65,8 +69,8 @@ public class SwerveSubsystem extends SubsystemBase{
             );
 
             backRight = new SwerveModuleReal(
-                SwerveConstants.kBackRightDriveMotorPort,
-                SwerveConstants.kBackRightTurningMotorPort,
+                OperatorConstants.kBackRightDriveMotorPort,
+                OperatorConstants.kBackRightTurningMotorPort,
                 SwerveConstants.kBackRightDriveEncoderReversed,
                 SwerveConstants.kBackRightTurningEncoderReversed,
                 SwerveConstants.kBackRightDriveAbsoluteEncoderPort,

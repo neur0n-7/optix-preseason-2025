@@ -40,7 +40,7 @@ public class SwerveModuleReal extends SubsystemBase implements SwerveModule {
             this.absoluteEncoderReversed = absoluteEncoderReversed;
             
             driveMotor = new SparkMax(driveMotorID, MotorType.kBrushless);
-            turningMotor = new SparkMax(driveMotorID, MotorType.kBrushless);
+            turningMotor = new SparkMax(turningMotorID, MotorType.kBrushless);
 
             // These functions are deprecated but I'm (temporarily) using them
             driveMotor.setInverted(driveMotorReversed);

@@ -3,21 +3,18 @@
 // the WPILib BSD license file in the root directory of this project.
 
 package frc.robot.subsystems.elevator;
-
-import com.revrobotics.spark.SparkLowLevel.MotorType;
-import com.revrobotics.spark.SparkMax;
-
 import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.math.controller.ElevatorFeedforward;
 import edu.wpi.first.math.controller.ProfiledPIDController;
 import edu.wpi.first.math.trajectory.TrapezoidProfile;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
+import frc.robot.subsystems.NeoMotor;
 import frc.robot.subsystems.elevator.ElevatorConstants.ElevatorStates;
 
 public class ElevatorSubsystem extends SubsystemBase {
 
-    private final SparkMax motor = new SparkMax(22, MotorType.kBrushless);
+    private final NeoMotor motor;
 
     private ElevatorStates state = ElevatorStates.LOWEST;
     private double setpoint = 0.0; // in meters
@@ -37,8 +34,11 @@ public class ElevatorSubsystem extends SubsystemBase {
         ElevatorConstants.kA
     );
 
-    public ElevatorSubsystem() {
+    public ElevatorSubsystem(NeoMotor motor) {
         profiled.setTolerance(0.02);
+
+        this.motor = motor;
+
     }
 
     public void setTarget(double meters){
@@ -48,7 +48,7 @@ public class ElevatorSubsystem extends SubsystemBase {
 
     private double getHeight(){
         // TODO: finish ts
-        System.out.print(motor.getEncoder().getPosition());
+        System.out.print(motor.getPosition());
         return 0.0;
     }
 

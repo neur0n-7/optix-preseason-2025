@@ -6,22 +6,22 @@ package frc.robot;
 import frc.robot.Constants.OperatorConstants;
 import frc.robot.commands.Autos;
 
-// import java.util.function.BooleanSupplier;
-// import java.util.function.DoubleSupplier;
+import java.util.function.BooleanSupplier;
+import java.util.function.DoubleSupplier;
 
 import edu.wpi.first.wpilibj.RobotBase;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 // import frc.robot.commands.drive.Drive;
 // import frc.robot.commands.drive.StopDriving;
-import frc.robot.commands.driveV2.GoToDegrees;
-// import frc.robot.commands.elevator.GoToElevatorHeight;
-// import frc.robot.commands.swerve.JoystickDrive;
+// import frc.robot.commands.driveV2.GoToDegrees;
+import frc.robot.commands.elevator.GoToElevatorHeight;
+import frc.robot.commands.swerve.JoystickDrive;
 // import frc.robot.subsystems.drive.DriveSubsystem;
-import frc.robot.subsystems.driveV2.DriveSubsystemV2;
-// import frc.robot.subsystems.elevator.ElevatorConstants;
-// import frc.robot.subsystems.elevator.ElevatorSubsystem;
-// import frc.robot.subsystems.swerve.SwerveSubsystem;
+// import frc.robot.subsystems.driveV2.DriveSubsystemV2;
+import frc.robot.subsystems.elevator.ElevatorConstants;
+import frc.robot.subsystems.elevator.ElevatorSubsystem;
+import frc.robot.subsystems.swerve.SwerveSubsystem;
 import frc.robot.subsystems.ExampleSubsystem;
 // import frc.robot.subsystems.NeoMotor;
 import frc.robot.subsystems.RealNeoMotor;
@@ -30,14 +30,15 @@ import frc.robot.subsystems.SimNeoMotor;
 
 public class RobotContainer {
 
-	/*
-	private final DriveSubsystem m_DriveSubsystem;
-	private final Drive m_Drive;
-	private final StopDriving m_StopDriving;
+	
+	// private final DriveSubsystem m_DriveSubsystem;
+	// private final Drive m_Drive;
+	// private final StopDriving m_StopDriving;
 
 	private final ElevatorSubsystem m_ElevatorSubsystem;
 	private final GoToElevatorHeight m_GoToElevatorHighest;
 	private final GoToElevatorHeight m_GoToElevatorLowest;
+	private final GoToElevatorHeight m_GoToElevatorMiddle;
 
 	private final SwerveSubsystem m_SwerveSubsystem;
 	private final JoystickDrive m_JoystickDrive;
@@ -49,7 +50,7 @@ public class RobotContainer {
 
 	private boolean fieldRelativeToggle;
 	private boolean fieldRelativeLastState;
-	 */
+	
 
 	private final ExampleSubsystem m_exampleSubsystem = new ExampleSubsystem();
 	// private final DriveSubsystemV2 m_DriveSubsystemV2;
@@ -66,28 +67,34 @@ public class RobotContainer {
 		if (RobotBase.isSimulation()){
 			// m_DriveSubsystemV2 = new DriveSubsystemV2(new SimNeoMotor());
 			// m_DriveSubsystem = new DriveSubsystem(new SimNeoMotor());
-			// m_ElevatorSubsystem = new ElevatorSubsystem(new SimNeoMotor());
+			m_ElevatorSubsystem = new ElevatorSubsystem(new SimNeoMotor());
 		} else {
 			// m_DriveSubsystemV2 = new DriveSubsystemV2(new RealNeoMotor(OperatorConstants.driveMotorCanId));
 			// m_DriveSubsystem = new DriveSubsystem(new RealNeoMotor(OperatorConstants.driveMotorCanId));
-			// m_ElevatorSubsystem = new ElevatorSubsystem(new RealNeoMotor(OperatorConstants.elevatorMotorCanId));
+			m_ElevatorSubsystem = new ElevatorSubsystem(new RealNeoMotor(OperatorConstants.elevatorMotorCanId));
 		}
 
+		// DRIVE (v2)
 		// m_DriveGoTo90 = new GoToDegrees(m_DriveSubsystemV2, 90);
 		// m_DriveGoTo0 = new GoToDegrees(m_DriveSubsystemV2, 0);
 
-		/*
+		// ELEVATOR
 		m_GoToElevatorHighest = new GoToElevatorHeight(m_ElevatorSubsystem, ElevatorConstants.ElevatorStates.HIGHEST);
 		m_GoToElevatorLowest = new GoToElevatorHeight(m_ElevatorSubsystem, ElevatorConstants.ElevatorStates.LOWEST);
-	
-		m_Drive = new Drive(m_DriveSubsystem);
-		m_StopDriving = new StopDriving(m_DriveSubsystem);
+		m_GoToElevatorMiddle = new GoToElevatorHeight(m_ElevatorSubsystem, ElevatorConstants.ElevatorStates.MIDDLE);
 
+		// DRIVE (v1)
+		// m_Drive = new Drive(m_DriveSubsystem);
+		// m_StopDriving = new StopDriving(m_DriveSubsystem);
+
+		// SWERVE
+		// left joystick handles movement, right joystick handles turning
 		xSpeedSupplier = () -> -m_driverController.getLeftY();
 		ySpeedSupplier = () -> -m_driverController.getLeftX();
 		rotSpeedSupplier = () -> -m_driverController.getRightX();
 
 		fieldRelativeToggle = false;
+
 		fieldRelativeSupplier = () -> {
 			if (m_driverController.b().getAsBoolean() && !fieldRelativeLastState) {
 				fieldRelativeToggle = !fieldRelativeToggle;
@@ -98,26 +105,34 @@ public class RobotContainer {
 
 		fieldRelativeLastState = false;
 
+
 		m_SwerveSubsystem = new SwerveSubsystem(RobotBase.isReal());
-		m_JoystickDrive = new JoystickDrive(m_SwerveSubsystem, xSpeedSupplier, ySpeedSupplier, rotSpeedSupplier, fieldRelativeSupplier);
-		m_SwerveSubsystem.setDefaultCommand(m_JoystickDrive);
-		 */
-
-
+		m_JoystickDrive = new JoystickDrive(
+			m_SwerveSubsystem,
+			xSpeedSupplier,
+			ySpeedSupplier,
+			rotSpeedSupplier,
+			fieldRelativeSupplier
+		);	
 	}
 
 	private void configureBindings() {
-		/*
-		m_driverController.a().onTrue(m_Drive);
-		m_driverController.a().onFalse(m_StopDriving);
+		
+		// SWERVE
+		m_SwerveSubsystem.setDefaultCommand(m_JoystickDrive);
 
+		// ELEVATOR
 		m_driverController.x().onTrue(m_GoToElevatorHighest);
 		m_driverController.y().onTrue(m_GoToElevatorLowest);
-		 */
-
-		// m_driverController.x().onFalse(m_DriveGoTo90);
-		// m_driverController.x().onTrue(m_DriveGoTo0);
+		m_driverController.a().onTrue(m_GoToElevatorMiddle);
 		 
+		// DRIVE (v1)
+		// m_driverController.a().onTrue(m_Drive);
+		// m_driverController.a().onFalse(m_StopDriving);
+
+		// DRIVE (v2)
+		// m_driverController.x().onFalse(m_DriveGoTo90);
+		// m_driverController.x().onTrue(m_DriveGoTo0);		 
 		
 	}
 

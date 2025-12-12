@@ -1,8 +1,8 @@
 
-package frc.robot.commands.motor;
+package frc.robot.commands.driveV2;
 
 import edu.wpi.first.wpilibj2.command.Command;
-import frc.robot.subsystems.motor.DriveSubsystemV2;
+import frc.robot.subsystems.driveV2.DriveSubsystemV2;
 
 public class GoToDegrees extends Command {
 

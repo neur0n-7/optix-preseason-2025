@@ -69,7 +69,7 @@ public class ElevatorSubsystem extends SubsystemBase {
     /*
      * commands shared by periodic() and simulationPeriodic()
     */
-    public void execUpdates(){
+    public void execUpdates(boolean useFeedforward){
         double currentPosition = getHeight();
 
         double ffVolts = feedforward.calculate(
@@ -95,12 +95,12 @@ public class ElevatorSubsystem extends SubsystemBase {
 
     @Override
     public void periodic() {
-        execUpdates();
+        execUpdates(true);
     }
 
     @Override
     public void simulationPeriodic() {
-        execUpdates();
+        execUpdates(false);
         updateElevatorDist();
     }
 }

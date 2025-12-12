@@ -14,11 +14,9 @@ import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 // import frc.robot.commands.drive.Drive;
 // import frc.robot.commands.drive.StopDriving;
-// import frc.robot.commands.driveV2.GoToDegrees;
 import frc.robot.commands.elevator.GoToElevatorHeight;
 import frc.robot.commands.swerve.JoystickDrive;
 // import frc.robot.subsystems.drive.DriveSubsystem;
-// import frc.robot.subsystems.driveV2.DriveSubsystemV2;
 import frc.robot.subsystems.elevator.ElevatorConstants;
 import frc.robot.subsystems.elevator.ElevatorSubsystem;
 import frc.robot.subsystems.swerve.SwerveSubsystem;
@@ -53,10 +51,6 @@ public class RobotContainer {
 	
 
 	private final ExampleSubsystem m_exampleSubsystem = new ExampleSubsystem();
-	// private final DriveSubsystemV2 m_DriveSubsystemV2;
-	// private final GoToDegrees m_DriveGoTo90;
-	// private final GoToDegrees m_DriveGoTo0;
-
 
 	private final CommandXboxController m_driverController = new CommandXboxController(OperatorConstants.kDriverControllerPort);
 
@@ -65,18 +59,12 @@ public class RobotContainer {
 		configureBindings();
 		
 		if (RobotBase.isSimulation()){
-			// m_DriveSubsystemV2 = new DriveSubsystemV2(new SimNeoMotor());
 			// m_DriveSubsystem = new DriveSubsystem(new SimNeoMotor());
 			m_ElevatorSubsystem = new ElevatorSubsystem(new SimNeoMotor());
 		} else {
-			// m_DriveSubsystemV2 = new DriveSubsystemV2(new RealNeoMotor(OperatorConstants.driveMotorCanId));
 			// m_DriveSubsystem = new DriveSubsystem(new RealNeoMotor(OperatorConstants.driveMotorCanId));
 			m_ElevatorSubsystem = new ElevatorSubsystem(new RealNeoMotor(OperatorConstants.elevatorMotorCanId));
 		}
-
-		// DRIVE (v2)
-		// m_DriveGoTo90 = new GoToDegrees(m_DriveSubsystemV2, 90);
-		// m_DriveGoTo0 = new GoToDegrees(m_DriveSubsystemV2, 0);
 
 		// ELEVATOR
 		m_GoToElevatorHighest = new GoToElevatorHeight(m_ElevatorSubsystem, ElevatorConstants.ElevatorStates.HIGHEST);
@@ -129,11 +117,6 @@ public class RobotContainer {
 		// DRIVE (v1)
 		// m_driverController.a().onTrue(m_Drive);
 		// m_driverController.a().onFalse(m_StopDriving);
-
-		// DRIVE (v2)
-		// m_driverController.x().onFalse(m_DriveGoTo90);
-		// m_driverController.x().onTrue(m_DriveGoTo0);		 
-		
 	}
 
 

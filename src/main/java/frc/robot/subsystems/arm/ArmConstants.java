@@ -1,4 +1,4 @@
-package frc.robot.subsystems.elevator;
+package frc.robot.subsystems.arm;
 
 public class ArmConstants {
 
@@ -15,7 +15,7 @@ public class ArmConstants {
     public static double kG = 0.39; // gravity FF
     public static double kS = 0.16; // friction FF
     public static double kV = 0.8; // voltage FF (maintain velocity)
-    public static double kA = 0 // acceleration? (predict acceleration effort)
+    public static double kA = 0; // acceleration? (predict acceleration effort)
 
     // Other stuff
 

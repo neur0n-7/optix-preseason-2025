@@ -33,6 +33,6 @@ public class RealNeoMotor implements NeoMotor {
 
     @Override
     public double getPosition(){
-        return motor.getEncoder().getPosition() * 360.0;
+        return motor.getEncoder().getPosition();
     }
 }

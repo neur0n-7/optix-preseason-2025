@@ -6,19 +6,19 @@ package frc.robot;
 import frc.robot.Constants.OperatorConstants;
 import frc.robot.commands.Autos;
 
-import java.util.function.BooleanSupplier;
-import java.util.function.DoubleSupplier;
+// import java.util.function.BooleanSupplier;
+// import java.util.function.DoubleSupplier;
 
 import edu.wpi.first.wpilibj.RobotBase;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
-import frc.robot.commands.drive.GoToDegrees;
+// import frc.robot.commands.drive.GoToDegrees;
 import frc.robot.commands.elevator.GoToElevatorHeight;
-import frc.robot.commands.swerve.JoystickDrive;
-import frc.robot.subsystems.drive.DriveSubsystem;
+// import frc.robot.commands.swerve.JoystickDrive;
+// import frc.robot.subsystems.drive.DriveSubsystem;
 import frc.robot.subsystems.elevator.ElevatorConstants;
 import frc.robot.subsystems.elevator.ElevatorSubsystem;
-import frc.robot.subsystems.swerve.SwerveSubsystem;
+// import frc.robot.subsystems.swerve.SwerveSubsystem;
 import frc.robot.subsystems.ExampleSubsystem;
 // import frc.robot.subsystems.NeoMotor;
 import frc.robot.subsystems.RealNeoMotor;
@@ -28,25 +28,25 @@ import frc.robot.subsystems.SimNeoMotor;
 public class RobotContainer {
 
 	
-	private final DriveSubsystem m_DriveSubsystem;
-	private final GoToDegrees m_GoTo90Degrees;
-	private final GoToDegrees m_GoTo0Degrees;
+	// private final DriveSubsystem m_DriveSubsystem;
+	// private final GoToDegrees m_GoTo90Degrees;
+	// private final GoToDegrees m_GoTo0Degrees;
 
 	private final ElevatorSubsystem m_ElevatorSubsystem;
 	private final GoToElevatorHeight m_GoToElevatorHighest;
 	private final GoToElevatorHeight m_GoToElevatorLowest;
 	private final GoToElevatorHeight m_GoToElevatorMiddle;
 
-	private final SwerveSubsystem m_SwerveSubsystem;
-	private final JoystickDrive m_JoystickDrive;
+	// private final SwerveSubsystem m_SwerveSubsystem;
+	// private final JoystickDrive m_JoystickDrive;
 
-	private final DoubleSupplier xSpeedSupplier;
-	private final DoubleSupplier ySpeedSupplier;
-	private final DoubleSupplier rotSpeedSupplier;
-	private final BooleanSupplier fieldRelativeSupplier;
+	// private final DoubleSupplier xSpeedSupplier;
+	// private final DoubleSupplier ySpeedSupplier;
+	// private final DoubleSupplier rotSpeedSupplier;
+	// private final BooleanSupplier fieldRelativeSupplier;
 
-	private boolean fieldRelativeToggle;
-	private boolean fieldRelativeLastState;
+	// private boolean fieldRelativeToggle;
+	// private boolean fieldRelativeLastState;
 	
 
 	private final ExampleSubsystem m_exampleSubsystem = new ExampleSubsystem();
@@ -56,11 +56,11 @@ public class RobotContainer {
 	public RobotContainer() {
 		
 		if (RobotBase.isSimulation()){
-			m_DriveSubsystem = new DriveSubsystem(new SimNeoMotor());
-			m_ElevatorSubsystem = new ElevatorSubsystem(new SimNeoMotor());
+			// m_DriveSubsystem = new DriveSubsystem(new SimNeoMotor());
+			m_ElevatorSubsystem = new ElevatorSubsystem(new SimNeoMotor(), false);
 		} else {
-			m_DriveSubsystem = new DriveSubsystem(new RealNeoMotor(OperatorConstants.driveMotorCanId));
-			m_ElevatorSubsystem = new ElevatorSubsystem(new RealNeoMotor(OperatorConstants.elevatorMotorCanId));
+			// m_DriveSubsystem = new DriveSubsystem(new RealNeoMotor(OperatorConstants.driveMotorCanId));
+			m_ElevatorSubsystem = new ElevatorSubsystem(new RealNeoMotor(OperatorConstants.elevatorMotorCanId), true);
 		}
 
 		// ELEVATOR
@@ -69,19 +69,20 @@ public class RobotContainer {
 		m_GoToElevatorMiddle = new GoToElevatorHeight(m_ElevatorSubsystem, ElevatorConstants.ElevatorStates.MIDDLE);
 
 		// DRIVE
-		m_GoTo90Degrees = new GoToDegrees(m_DriveSubsystem, 90);
-		m_GoTo0Degrees = new GoToDegrees(m_DriveSubsystem, 0);
+		// m_GoTo90Degrees = new GoToDegrees(m_DriveSubsystem, 90);
+		// m_GoTo0Degrees = new GoToDegrees(m_DriveSubsystem, 0);
 
 		// SWERVE
 
 		// Supplier lambdas
 		// left joystick handles movement, right joystick handles turning
-		xSpeedSupplier = () -> -m_driverController.getLeftY();
-		ySpeedSupplier = () -> m_driverController.getLeftX();
-		rotSpeedSupplier = () -> m_driverController.getRightX();
+		// xSpeedSupplier = () -> -m_driverController.getLeftY();
+		// ySpeedSupplier = () -> m_driverController.getLeftX();
+		// rotSpeedSupplier = () -> m_driverController.getRightX();
 
-		fieldRelativeToggle = false;
+		// fieldRelativeToggle = false;
 
+		/*
 		fieldRelativeSupplier = () -> {
 			if (m_driverController.b().getAsBoolean() && !fieldRelativeLastState) {
 				fieldRelativeToggle = !fieldRelativeToggle;
@@ -92,7 +93,6 @@ public class RobotContainer {
 
 		fieldRelativeLastState = false;
 
-
 		m_SwerveSubsystem = new SwerveSubsystem(RobotBase.isReal());
 		m_JoystickDrive = new JoystickDrive(
 			m_SwerveSubsystem,
@@ -101,6 +101,8 @@ public class RobotContainer {
 			rotSpeedSupplier,
 			fieldRelativeSupplier
 		);	
+		/* 
+		
 
 		// CONFIGURE BINDINGS ////////////////////
 		configureBindings();
@@ -108,9 +110,22 @@ public class RobotContainer {
 	}
 
 	private void configureBindings() {
-		
+		/*
+		 * The bindings are as follows:
+		 *  - Left joystick to move robot w/ swerve
+		 *  - Right joystick to rotate robot w/ swerve
+		 * 
+		 *  - X to go to elevator max
+		 *  - Y to go to elevator min
+		 *  - A to go to elevator mid
+		 * 
+		 * 	Drive (single motor):
+		 *  - Left bumper to go to 0 degrees
+		 *  - Right bumper to go to 90 degrees
+		 */
+
 		// SWERVE
-		m_SwerveSubsystem.setDefaultCommand(m_JoystickDrive);
+		// m_SwerveSubsystem.setDefaultCommand(m_JoystickDrive);
 
 		// ELEVATOR
 		m_driverController.x().onTrue(m_GoToElevatorHighest);
@@ -118,11 +133,10 @@ public class RobotContainer {
 		m_driverController.a().onTrue(m_GoToElevatorMiddle);
 		 
 		// DRIVE
-		m_driverController.leftBumper().onTrue(m_GoTo0Degrees);
-		m_driverController.rightBumper().onTrue(m_GoTo90Degrees);
+		// m_driverController.leftBumper().onTrue(m_GoTo0Degrees);
+		// m_driverController.rightBumper().onTrue(m_GoTo90Degrees);
 		
 	}
-
 
 	public Command getAutonomousCommand() {
 		// An example command will be run in autonomous

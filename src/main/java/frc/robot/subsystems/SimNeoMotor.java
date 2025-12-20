@@ -7,13 +7,15 @@ import edu.wpi.first.math.system.plant.DCMotor;
 import edu.wpi.first.math.system.plant.LinearSystemId;
 import edu.wpi.first.wpilibj.simulation.FlywheelSim;
 import edu.wpi.first.wpilibj.simulation.RoboRioSim;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj.simulation.BatterySim;
+import edu.wpi.first.wpilibj.simulation.ElevatorSim;
 
 public class SimNeoMotor implements NeoMotor {
 
     private static final DCMotor motor = DCMotor.getNEO(1);
     private static final double J = 0.00032; // inertia (kg*m^2)
-
+    
     private static final LinearSystem<N1, N1, N1> plant =
         LinearSystemId.createFlywheelSystem(motor, J, 1.0);
 
@@ -39,10 +41,17 @@ public class SimNeoMotor implements NeoMotor {
 
     @Override
     public void updateSimulation(double dtSeconds) {
+
+        // System.out.println("updateSimulation() called");
+
         sim.setInputVoltage(voltage);
         sim.update(dtSeconds);
 
         double radPerSec = sim.getAngularVelocityRadPerSec();
+        SmartDashboard.putNumber("Elevator/RadsPerSec", radPerSec);
+        SmartDashboard.putNumber("Elevator/DtSeconds", radPerSec);
+        
+
         positionRotations += (radPerSec * dtSeconds) / (2.0 * Math.PI);
 
         // battery sag
@@ -58,6 +67,7 @@ public class SimNeoMotor implements NeoMotor {
 
     @Override
     public double getPosition() {
-        return positionRotations * 360.0;
+        SmartDashboard.putNumber("Elevator/MotorRotations", positionRotations);
+        return positionRotations;
     }
 }

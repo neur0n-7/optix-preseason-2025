@@ -6,7 +6,7 @@ public class ElevatorConstants {
 
     // ELEVATOR CONTROL ////////////////////////////////////////////////////////
     // PID
-    public static double kP = 12;
+    public static double kP = 5;
     public static double kI = 0;
     public static double kD = 0;
 
@@ -14,13 +14,13 @@ public class ElevatorConstants {
     // stolen from Team-3749-2025 for now :))
     public static double kG = 0.32; // gravity FF
     public static double kS = 0.16; // friction FF
-    public static double kV = 7.77; // voltage FF (maintain velocity)
-    public static double kA = 0.27; // acceleration? (predict acceleration effort)
+    public static double kV = 1.0; // voltage FF (maintain velocity)
+    public static double kA = 0.05; // acceleration? idk how this works :(
 
     // Other stuff
 
-    public static double maxVelocity = 1.415;
-    public static double maxAccel = 4.1;
+    public static double maxVelocity = 5;
+    public static double maxAccel = 20;
 
     // ELEVATOR SPECS ////////////////////////////////////////////////////////
     // numbers also taken from optix 2025 code, can be changed to use actual specs
@@ -28,6 +28,11 @@ public class ElevatorConstants {
     public static final double gearing = 16 * (24.0 / 22.0);
     public static final double elevatorBaseHeight = Units.feetToMeters(3.25); // meters
 
+
+    public static final double drumDiameter = Units.inchesToMeters(1.5);
+    public static final double drumCircumference = Math.PI * drumDiameter;
+
+    public static final double metersPerMotorRotation = drumCircumference / gearing;
     // ELEVATOR STATES ////////////////////////////////////////////////////////
     public enum ElevatorStates {
         LOWEST(0),

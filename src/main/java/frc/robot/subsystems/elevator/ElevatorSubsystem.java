@@ -45,7 +45,7 @@ public class ElevatorSubsystem extends SubsystemBase {
     private ElevatorFeedforward feedforward;
 
     public ElevatorSubsystem(NeoMotor motor, boolean isSim) {
-        profiled.setTolerance(0.1);
+        profiled.setTolerance(0.01);
 
         this.motor = motor;
 
@@ -88,6 +88,7 @@ public class ElevatorSubsystem extends SubsystemBase {
 
     @Override
     public void periodic() {
+
         double currentHeight = getHeight();
 
         State setpointState = profiled.getSetpoint();
@@ -120,6 +121,23 @@ public class ElevatorSubsystem extends SubsystemBase {
 
         SmartDashboard.putString("Elevator/State", state.toString());
         SmartDashboard.putBoolean("Elevator/AtSetpoint", profiled.atGoal());
+
+        // printing (for testing)
+
+        System.out.println("Periodic call ---");
+        System.out.println(
+            "SETPOINT %f, CURRENT %f, PID OUT %f, FF OUT %f, TOTAL OUT %f".formatted(
+                setpoint, currentHeight, pidOutput, ffVolts, totalVolts
+            )
+        );
+        System.out.println(
+            "AT SETPOINT %b, VELOCITY %f, ACCEL %f".formatted(
+                profiled.atGoal(), currentVelocity, currentAccel
+            )
+        );
+
+
+
     }
 
     @Override

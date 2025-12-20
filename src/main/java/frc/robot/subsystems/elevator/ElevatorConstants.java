@@ -19,7 +19,7 @@ public class ElevatorConstants {
 
     // Other stuff
 
-    public static double maxVelocity = 5;
+    public static double maxVelocity = 10;
     public static double maxAccel = 20;
 
     // ELEVATOR SPECS ////////////////////////////////////////////////////////
@@ -35,13 +35,13 @@ public class ElevatorConstants {
     public static final double metersPerMotorRotation = drumCircumference / gearing;
     // ELEVATOR STATES ////////////////////////////////////////////////////////
     public enum ElevatorStates {
-        LOWEST(0),
-        MIDDLE(3),
-        HIGHEST(6);
+        LOWEST(Units.feetToMeters(0)),
+        MIDDLE(Units.feetToMeters(3)),
+        HIGHEST(Units.feetToMeters(6));
 
-        public final int position;
+        public final double position;
 
-        ElevatorStates(int position) {
+        ElevatorStates(double position) {
             this.position = position;
         }
     }

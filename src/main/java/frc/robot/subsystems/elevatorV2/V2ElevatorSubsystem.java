@@ -9,6 +9,7 @@ import edu.wpi.first.math.trajectory.TrapezoidProfile;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.subsystems.NeoMotor;
+import frc.robot.subsystems.elevatorV2.V2ElevatorConstants.ElevatorStates;
 
 public class V2ElevatorSubsystem extends SubsystemBase {
 
@@ -19,6 +20,10 @@ public class V2ElevatorSubsystem extends SubsystemBase {
     private final ElevatorFeedforward feedforward;
 
     private double lastVelocity = 0.0;
+
+    private double setpointMeters = 0.0;
+
+    private ElevatorStates state = ElevatorStates.LOWEST;
 
     private final LoggedMechanism2d mech = new LoggedMechanism2d(3, 3);
     private final LoggedMechanismLigament2d elevatorMech;
@@ -59,9 +64,10 @@ public class V2ElevatorSubsystem extends SubsystemBase {
         );
     }
 
-
-    public void setTargetMeters(double meters) {
-        pidController.setGoal(meters);
+    public void setTargetState(ElevatorStates targetState){
+        pidController.setGoal(targetState.position);
+        setpointMeters = targetState.position;
+        state = targetState;
     }
 
     public boolean atTarget() {
@@ -94,12 +100,20 @@ public class V2ElevatorSubsystem extends SubsystemBase {
 
         elevatorMech.setLength(V2ElevatorConstants.elevatorBaseHeight + position);
 
-        SmartDashboard.putNumber("Elevator/Position (m)", position);
-        SmartDashboard.putNumber("Elevator/PID Volts", pidVolts);
-        SmartDashboard.putNumber("Elevator/FF Volts", ffVolts);
-        SmartDashboard.putNumber("Elevator/Total Volts", outputVolts);
-        SmartDashboard.putBoolean("Elevator/At Target", atTarget());
-        SmartDashboard.putData("Elevator/Mech2d", mech);
+        SmartDashboard.putNumber("ElevatorV2/Position", position);
+        SmartDashboard.putNumber("ElevatorV2/Setpoint", setpointMeters);
+        SmartDashboard.putString("ElevatorV2/Target State", state.toString());
+        SmartDashboard.putNumber("ElevatorV2/Error", setpointMeters - position);
+
+        SmartDashboard.putNumber("ElevatorV2/Velocity", currentVelocity);
+        SmartDashboard.putNumber("ElevatorV2/Acceleration", acceleration);
+
+        SmartDashboard.putNumber("ElevatorV2/PID Volts", pidVolts);
+        SmartDashboard.putNumber("ElevatorV2/FF Volts", ffVolts);
+        SmartDashboard.putNumber("ElevatorV2/Total Volts", outputVolts);
+        SmartDashboard.putBoolean("ElevatorV2/At Target", atTarget());
+        SmartDashboard.putData("ElevatorV2/Mech2d", mech);
+
     
     }
 

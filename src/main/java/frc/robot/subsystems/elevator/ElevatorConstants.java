@@ -19,8 +19,8 @@ public class ElevatorConstants {
 
     // Other stuff
 
-    public static double maxVelocity = 10;
-    public static double maxAccel = 20;
+    public static double maxVelocity = 10; // meters/s
+    public static double maxAccel = 20; // meters/s^2
 
     // ELEVATOR SPECS ////////////////////////////////////////////////////////
     // numbers also taken from optix 2025 code, can be changed to use actual specs

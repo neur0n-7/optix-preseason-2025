@@ -5,19 +5,19 @@ import edu.wpi.first.math.util.Units;
 public class V2ElevatorConstants {
 
     // PID
-    public static final double kP = 5;
+    public static final double kP = 12;
     public static final double kI = 0.0;
     public static final double kD = 0.0;
 
-    // FF
-    public static final double kS = 0.16; // friction
-    public static final double kG = 0.32; // gravity
-    public static final double kV = 1;  // velocity
-    public static final double kA = 0.1; // accel
-
     // contraints
-    public static final double maxVelocity = 2.0;  // m/sec
-    public static final double maxAccel = 3.0;     // m/sec^2
+    public static final double maxVelocity = 0.660;  // m/sec
+    public static final double maxAccel = 7.776;     // m/sec^2
+
+    // FF
+    public static final double kS = 0.0; // friction
+    public static final double kG = 0.0; // gravity
+    public static final double kV = 12.0 / maxVelocity;  // velocity
+    public static final double kA = (12.0) / maxAccel; // accel
 
     // specs
     public static final double elevatorBaseHeight = Units.feetToMeters(3.25);
@@ -25,7 +25,7 @@ public class V2ElevatorConstants {
     public static final double gearing = 16 * (24.0 / 22.0); 
     public static final double drumCircumference = Math.PI * drumDiameter;
     public static final double metersPerMotorRotation = drumCircumference / gearing;
-    public static final double carriageMassKg = 5.0;
+    public static final double carriageMassKg = Units.lbsToKilograms(54);
 
     public enum ElevatorStates {
         LOWEST(0.0),

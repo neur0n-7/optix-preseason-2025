@@ -5,6 +5,7 @@
 package frc.robot;
 import frc.robot.Constants.OperatorConstants;
 import frc.robot.commands.Autos;
+// import frc.robot.commands.elevatorV2.SetElevator12V;
 import frc.robot.commands.elevatorV2.SetElevatorState;
 import edu.wpi.first.wpilibj.RobotBase;
 import edu.wpi.first.wpilibj2.command.Command;
@@ -62,6 +63,8 @@ public class RobotContainer {
 	private final SetElevatorState m_GoToElevatorLowest;
 	private final SetElevatorState m_GoToElevatorMiddle;
 
+	// private final SetElevator12V m_SetElevator12V;
+
 	
 
 	private final ExampleSubsystem m_exampleSubsystem = new ExampleSubsystem();
@@ -101,6 +104,8 @@ public class RobotContainer {
 		m_GoToElevatorLowest = new SetElevatorState(m_ElevatorSubsystem2, V2ElevatorConstants.ElevatorStates.LOWEST);
 		m_GoToElevatorMiddle = new SetElevatorState(m_ElevatorSubsystem2, V2ElevatorConstants.ElevatorStates.MIDDLE);
 		m_GoToElevatorHighest = new SetElevatorState(m_ElevatorSubsystem2, V2ElevatorConstants.ElevatorStates.HIGHEST);
+
+		// m_SetElevator12V = new SetElevator12V(m_ElevatorSubsystem2);
 
 		// DRIVE ////////////////////
 		// m_GoTo90Degrees = new GoToDegrees(m_DriveSubsystem, 90);
@@ -170,7 +175,7 @@ public class RobotContainer {
 		m_driverController.x().onTrue(m_GoToElevatorHighest);
 		m_driverController.y().onTrue(m_GoToElevatorLowest);
 		m_driverController.a().onTrue(m_GoToElevatorMiddle);
-
+		// m_driverController.b().onTrue(m_SetElevator12V);
 		 
 		// DRIVE
 		// m_driverController.leftBumper().onTrue(m_GoTo0Degrees);

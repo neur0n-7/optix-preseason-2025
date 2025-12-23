@@ -15,9 +15,8 @@ public class SimNeoMotor implements NeoMotor {
 
     private static final DCMotor motor = DCMotor.getNEO(1);
     private static final double J = 0.00032; // inertia (kg*m^2)
-    
-    private static final LinearSystem<N1, N1, N1> plant =
-        LinearSystemId.createFlywheelSystem(motor, J, 1.0);
+
+    private static final LinearSystem<N1, N1, N1> plant = LinearSystemId.createFlywheelSystem(motor, J, 1.0);
 
     private final FlywheelSim sim = new FlywheelSim(plant, motor);
 
@@ -50,14 +49,12 @@ public class SimNeoMotor implements NeoMotor {
         double radPerSec = sim.getAngularVelocityRadPerSec();
         SmartDashboard.putNumber("ElevatorV2/RadsPerSec", radPerSec);
         SmartDashboard.putNumber("ElevatorV2/DtSeconds", dtSeconds);
-        
 
         positionRotations += (radPerSec * dtSeconds) / (2.0 * Math.PI);
 
         // battery sag
         RoboRioSim.setVInVoltage(
-            BatterySim.calculateDefaultBatteryLoadedVoltage(sim.getCurrentDrawAmps())
-        );
+                BatterySim.calculateDefaultBatteryLoadedVoltage(sim.getCurrentDrawAmps()));
     }
 
     @Override

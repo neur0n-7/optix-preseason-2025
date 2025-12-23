@@ -12,7 +12,6 @@ import frc.robot.subsystems.elevatorV2.V2ElevatorConstants.ElevatorStates;
 
 public class V2ElevatorSubsystem extends SubsystemBase {
 
-
     private final SimElevatorMotor motor;
 
     private final ProfiledPIDController pidController;
@@ -22,7 +21,6 @@ public class V2ElevatorSubsystem extends SubsystemBase {
 
     private double lastActualHeight = 0.0;
     private double lastActualVelocity = 0.0;
-
 
     private double targetMeters = 0.0;
 
@@ -35,39 +33,33 @@ public class V2ElevatorSubsystem extends SubsystemBase {
         this.motor = motor;
 
         pidController = new ProfiledPIDController(
-            V2ElevatorConstants.kP,
-            V2ElevatorConstants.kI,
-            V2ElevatorConstants.kD,
-            new TrapezoidProfile.Constraints(
-                V2ElevatorConstants.maxVelocity,
-                V2ElevatorConstants.maxAccel
-            )
-        );
+                V2ElevatorConstants.kP,
+                V2ElevatorConstants.kI,
+                V2ElevatorConstants.kD,
+                new TrapezoidProfile.Constraints(
+                        V2ElevatorConstants.maxVelocity,
+                        V2ElevatorConstants.maxAccel));
         pidController.setTolerance(0.01);
 
-
-        if (isSim){
+        if (isSim) {
             feedforward = new ElevatorFeedforward(0.0, 0.0, V2ElevatorConstants.kV, V2ElevatorConstants.kA);
         } else {
             feedforward = new ElevatorFeedforward(
-                V2ElevatorConstants.kS,
-                V2ElevatorConstants.kG,
-                V2ElevatorConstants.kV,
-                V2ElevatorConstants.kA
-            );
+                    V2ElevatorConstants.kS,
+                    V2ElevatorConstants.kG,
+                    V2ElevatorConstants.kV,
+                    V2ElevatorConstants.kA);
         }
 
         LoggedMechanismRoot2d root = mech.getRoot("elevator", 1, 0);
         elevatorMech = root.append(
-            new LoggedMechanismLigament2d(
-                "elevator",
-                0.0,
-                90
-            )
-        );
+                new LoggedMechanismLigament2d(
+                        "elevator",
+                        0.0,
+                        90));
     }
 
-    public void setTargetState(ElevatorStates targetState){
+    public void setTargetState(ElevatorStates targetState) {
         pidController.setGoal(targetState.position);
         targetMeters = targetState.position;
         state = targetState;
@@ -82,10 +74,9 @@ public class V2ElevatorSubsystem extends SubsystemBase {
         return motor.getPosition() * V2ElevatorConstants.metersPerMotorRotation;
     }
 
-    public void setMotorVoltage(double volts){
+    public void setMotorVoltage(double volts) {
         motor.setVoltage(volts);
     }
-
 
     @Override
     public void periodic() {
@@ -105,7 +96,6 @@ public class V2ElevatorSubsystem extends SubsystemBase {
         lastActualHeight = currentPosition;
         lastActualVelocity = actualVelocity;
 
-
         double ffVolts = feedforward.calculate(setpointVelocity, setpointAcceleration);
         // double ffVolts = 0.0;
 
@@ -121,12 +111,12 @@ public class V2ElevatorSubsystem extends SubsystemBase {
 
         boolean isAtTarget = atTarget();
 
-        if (isAtTarget){
+        if (isAtTarget) {
             SmartDashboard.putString("ElevatorV2/Action", "HOLD %s".formatted(state.toString()));
         } else {
-            if (setpointAcceleration > 0){
+            if (setpointAcceleration > 0) {
                 SmartDashboard.putString("ElevatorV2/Action", "ACCEL");
-            } else if (setpointAcceleration < 0){
+            } else if (setpointAcceleration < 0) {
                 SmartDashboard.putString("ElevatorV2/Action", "DECEL");
             } else {
                 SmartDashboard.putString("ElevatorV2/Action", "CRUISE");
@@ -135,7 +125,7 @@ public class V2ElevatorSubsystem extends SubsystemBase {
 
         SmartDashboard.putNumber("ElevatorV2/Velocity (Setpoint)", setpointVelocity);
         SmartDashboard.putNumber("ElevatorV2/Velocity (Actual)", actualVelocity);
-        
+
         SmartDashboard.putNumber("ElevatorV2/Acceleration (Setpoint)", setpointAcceleration);
         SmartDashboard.putNumber("ElevatorV2/Acceleration (Actual)", actualAccel);
 
@@ -146,13 +136,13 @@ public class V2ElevatorSubsystem extends SubsystemBase {
         SmartDashboard.putData("ElevatorV2/Mech2d", mech);
 
         /*
-        System.out.println("PERIODIC CALLED");
-        System.out.println(
-            "POS %f, SETPT %f, VELOCITY %f, ACCEL %f, PID V %f, FF V %f".formatted(
-                position, setpointMeters, currentVelocity, acceleration, pidVolts, ffVolts)
-        );
+         * System.out.println("PERIODIC CALLED");
+         * System.out.println(
+         * "POS %f, SETPT %f, VELOCITY %f, ACCEL %f, PID V %f, FF V %f".formatted(
+         * position, setpointMeters, currentVelocity, acceleration, pidVolts, ffVolts)
+         * );
          */
-    
+
     }
 
     @Override

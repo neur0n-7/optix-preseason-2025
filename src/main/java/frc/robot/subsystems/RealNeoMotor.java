@@ -17,7 +17,7 @@ public class RealNeoMotor implements NeoMotor {
     }
 
     @Override
-    public double getAppliedOutput(){
+    public double getAppliedOutput() {
         return motor.getAppliedOutput();
     }
 
@@ -27,12 +27,12 @@ public class RealNeoMotor implements NeoMotor {
     }
 
     @Override
-    public double getBusVoltage(){
+    public double getBusVoltage() {
         return motor.getBusVoltage();
     }
 
     @Override
-    public double getPosition(){
+    public double getPosition() {
         return motor.getEncoder().getPosition();
     }
 }

@@ -7,7 +7,7 @@ public interface NeoMotor {
     void setVoltage(double volts);
 
     // by default, updateSimulation() won't do anything in real
-    default void updateSimulation(double dtSeconds) {};
+    default void updateSimulation(double dtSeconds) { };
 
     double getAppliedOutput();
 

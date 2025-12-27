@@ -2,7 +2,7 @@ package frc.robot.subsystems.swerve;
 
 import edu.wpi.first.math.kinematics.SwerveModuleState;
 
-public interface SwerveModule {
+public interface SwerveModuleIO {
 
     public void setDriveVoltage(double volts);
 

@@ -13,7 +13,7 @@ public class DriveSubsystem extends SubsystemBase {
     private static LoggedTunableNumber kPLogger = new LoggedTunableNumber("Drive/kP", DriveConstants.kP);
 
 
-	private final NeoMotor motor; // new SparkMax(22, MotorType.kBrushless);
+	private final NeoMotorIO motor; // new SparkMax(22, MotorType.kBrushless);
 	private final PIDController pid = new PIDController(
 			kPLogger.get(),
 			DriveConstants.kI,
@@ -21,7 +21,7 @@ public class DriveSubsystem extends SubsystemBase {
 
 	private double targetDegrees = 0.0;
 
-	public DriveSubsystem(NeoMotor motor) {
+	public DriveSubsystem(NeoMotorIO motor) {
 		pid.setTolerance(DriveConstants.PIDTolerance);
 		this.motor = motor;
 	}

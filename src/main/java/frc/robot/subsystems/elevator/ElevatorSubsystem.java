@@ -12,14 +12,13 @@ import frc.robot.subsystems.elevator.ElevatorConstants.ElevatorStates;
 
 public class ElevatorSubsystem extends SubsystemBase {
 
-    private final SimElevatorMotor motor;
+    private final ElevatorMotorIO motor;
 
     private final ProfiledPIDController pidController;
     private final ElevatorFeedforward feedforward;
 
     private double lastSetpointVelocity = 0.0;
 
-    private double lastActualHeight = 0.0;
     private double lastActualVelocity = 0.0;
 
     private double targetMeters = 0.0;
@@ -29,7 +28,7 @@ public class ElevatorSubsystem extends SubsystemBase {
     private final LoggedMechanism2d mech = new LoggedMechanism2d(3, 3);
     private final LoggedMechanismLigament2d elevatorMech;
 
-    public ElevatorSubsystem(SimElevatorMotor motor, boolean isSim) {
+    public ElevatorSubsystem(ElevatorMotorIO motor) {
         this.motor = motor;
 
         pidController = new ProfiledPIDController(
@@ -92,10 +91,9 @@ public class ElevatorSubsystem extends SubsystemBase {
         double setpointAcceleration = (setpointVelocity - lastSetpointVelocity) / 0.02;
         lastSetpointVelocity = setpointVelocity;
 
-        double actualVelocity = (currentPosition - lastActualHeight) / 0.02;
+        double actualVelocity = motor.getVelocity();
         double actualAccel = (actualVelocity - lastActualVelocity) / 0.02;
 
-        lastActualHeight = currentPosition;
         lastActualVelocity = actualVelocity;
 
         double ffVolts = feedforward.calculate(setpointVelocity, setpointAcceleration);
@@ -106,22 +104,22 @@ public class ElevatorSubsystem extends SubsystemBase {
 
         elevatorMech.setLength(currentPosition);
 
-        SmartDashboard.putNumber("ElevatorV2/Position", currentPosition);
-        SmartDashboard.putNumber("ElevatorV2/Target", targetMeters);
-        SmartDashboard.putString("ElevatorV2/Target State", state.toString());
-        SmartDashboard.putNumber("ElevatorV2/Error", targetMeters - currentPosition);
+        SmartDashboard.putNumber("Elevator/Position", currentPosition);
+        SmartDashboard.putNumber("Elevator/Target", targetMeters);
+        SmartDashboard.putString("Elevator/Target State", state.toString());
+        SmartDashboard.putNumber("Elevator/Error", targetMeters - currentPosition);
 
-        SmartDashboard.putNumber("ElevatorV2/Velocity (Setpoint)", setpointVelocity);
-        SmartDashboard.putNumber("ElevatorV2/Velocity (Actual)", actualVelocity);
+        SmartDashboard.putNumber("Elevator/Velocity (Setpoint)", setpointVelocity);
+        SmartDashboard.putNumber("Elevator/Velocity (Actual)", actualVelocity);
 
-        SmartDashboard.putNumber("ElevatorV2/Acceleration (Setpoint)", setpointAcceleration);
-        SmartDashboard.putNumber("ElevatorV2/Acceleration (Actual)", actualAccel);
+        SmartDashboard.putNumber("Elevator/Acceleration (Setpoint)", setpointAcceleration);
+        SmartDashboard.putNumber("Elevator/Acceleration (Actual)", actualAccel);
 
-        SmartDashboard.putNumber("ElevatorV2/PID Volts", pidVolts);
-        SmartDashboard.putNumber("ElevatorV2/FF Volts", ffVolts);
-        SmartDashboard.putNumber("ElevatorV2/Total Volts", totalVolts);
-        SmartDashboard.putBoolean("ElevatorV2/At Target", atTarget());
-        SmartDashboard.putData("ElevatorV2/Mech2d", mech);
+        SmartDashboard.putNumber("Elevator/PID Volts", pidVolts);
+        SmartDashboard.putNumber("Elevator/FF Volts", ffVolts);
+        SmartDashboard.putNumber("Elevator/Total Volts", totalVolts);
+        SmartDashboard.putBoolean("Elevator/At Target", atTarget());
+        SmartDashboard.putData("Elevator/Mech2d", mech);
 
         /*
          * System.out.println("PERIODIC CALLED");

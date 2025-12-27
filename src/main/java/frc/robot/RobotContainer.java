@@ -25,6 +25,7 @@ import frc.robot.subsystems.drive.SimNeoMotor;
 import frc.robot.subsystems.elevator.SimElevatorMotor;
 import frc.robot.subsystems.elevator.ElevatorConstants;
 import frc.robot.subsystems.elevator.ElevatorSubsystem;
+import frc.robot.subsystems.elevator.RealElevatorMotor;
 
 public class RobotContainer {
 
@@ -44,9 +45,9 @@ public class RobotContainer {
 
 	// ELEVATOR
 	private final ElevatorSubsystem m_ElevatorSubsystem;
-	private final SetElevatorState m_GoToElevatorHighest;
-	private final SetElevatorState m_GoToElevatorLowest;
-	private final SetElevatorState m_GoToElevatorMiddle;
+	private final SetElevatorState m_SetElevatorHighest;
+	private final SetElevatorState m_SetElevatorLowest;
+	private final SetElevatorState m_SetElevatorMiddle;
 
 	private final ExampleSubsystem m_exampleSubsystem = new ExampleSubsystem();
 
@@ -80,16 +81,20 @@ public class RobotContainer {
 
 		// ELEVATOR
 		if (subsystemEnabled.getOrDefault("ELEVATOR", false)) {
-			m_ElevatorSubsystem = new ElevatorSubsystem(new SimElevatorMotor(), false);
+			if (RobotBase.isSimulation()){
+				m_ElevatorSubsystem = new ElevatorSubsystem(new SimElevatorMotor());
+			} else {
+				m_ElevatorSubsystem = new ElevatorSubsystem(new RealElevatorMotor(Constants.OperatorConstants.elevatorMotorCanId, false));
+			}
 	
-			m_GoToElevatorLowest = new SetElevatorState(m_ElevatorSubsystem, ElevatorConstants.ElevatorStates.LOWEST);
-			m_GoToElevatorMiddle = new SetElevatorState(m_ElevatorSubsystem, ElevatorConstants.ElevatorStates.MIDDLE);
-			m_GoToElevatorHighest = new SetElevatorState(m_ElevatorSubsystem, ElevatorConstants.ElevatorStates.HIGHEST);
+			m_SetElevatorLowest = new SetElevatorState(m_ElevatorSubsystem, ElevatorConstants.ElevatorStates.LOWEST);
+			m_SetElevatorMiddle = new SetElevatorState(m_ElevatorSubsystem, ElevatorConstants.ElevatorStates.MIDDLE);
+			m_SetElevatorHighest = new SetElevatorState(m_ElevatorSubsystem, ElevatorConstants.ElevatorStates.HIGHEST);
 		} else {
 			m_ElevatorSubsystem = null;
-			m_GoToElevatorLowest = null;
-			m_GoToElevatorMiddle = null;
-			m_GoToElevatorHighest = null;
+			m_SetElevatorLowest = null;
+			m_SetElevatorMiddle = null;
+			m_SetElevatorHighest = null;
 		}
 
 		// SWERVE
@@ -134,8 +139,8 @@ public class RobotContainer {
 		 * - A to go to elevator mid
 		 * 
 		 * DRIVE (single motor):
-		 * - Hold B to go to 90 degrees
-		 * - Release B to go to 0 degrees
+		 * - Press X to go to 0 degrees
+		 * - Press Y to go to 90 degrees
 		 */
 
 		if (subsystemEnabled.getOrDefault("SWERVE", false)) {
@@ -148,16 +153,16 @@ public class RobotContainer {
 		if (subsystemEnabled.getOrDefault("ELEVATOR", false)) {
 			// ELEVATOR
 			System.out.println("ELEVATOR - Subsystem enabled");
-			m_driverController.x().onTrue(m_GoToElevatorHighest);
-			m_driverController.y().onTrue(m_GoToElevatorLowest);
-			m_driverController.a().onTrue(m_GoToElevatorMiddle);
+			m_driverController.x().onTrue(m_SetElevatorHighest);
+			m_driverController.y().onTrue(m_SetElevatorLowest);
+			m_driverController.a().onTrue(m_SetElevatorMiddle);
 		}
 
 		if (subsystemEnabled.getOrDefault("DRIVE", false)) {
 			// DRIVE
 			System.out.println("DRIVE - Subsystem enabled");
-			m_driverController.b().onTrue(m_GoTo90Degrees);
-			m_driverController.b().onFalse(m_GoTo0Degrees);
+			m_driverController.x().onTrue(m_GoTo0Degrees);
+			m_driverController.y().onTrue(m_GoTo90Degrees);
 		}
 	}
 

@@ -10,7 +10,7 @@ import edu.wpi.first.wpilibj2.command.SubsystemBase;
 
 public class SwerveSubsystem extends SubsystemBase{
 
-    private final SwerveModule[] modules = new SwerveModule[4];
+    private final SwerveModuleIO[] modules = new SwerveModuleIO[4];
 
     private final SwerveDriveKinematics kinematics = SwerveConstants.DrivetrainConstants.driveKinematics;
 
@@ -48,7 +48,7 @@ public class SwerveSubsystem extends SubsystemBase{
         }
     }
 
-    private void logSwerveModule(String name, SwerveModule module) {
+    private void logSwerveModule(String name, SwerveModuleIO module) {
         SmartDashboard.putNumber(name + " Drive Pos", module.getDrivePosition());
         SmartDashboard.putNumber(name + " Drive Vel", module.getDriveVelocity());
         SmartDashboard.putNumber(name + " Turn Pos", module.getTurningPosition());

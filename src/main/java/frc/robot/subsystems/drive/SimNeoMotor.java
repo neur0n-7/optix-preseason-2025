@@ -9,7 +9,7 @@ import edu.wpi.first.wpilibj.simulation.FlywheelSim;
 import edu.wpi.first.wpilibj.simulation.RoboRioSim;
 import edu.wpi.first.wpilibj.simulation.BatterySim;
 
-public class SimNeoMotor implements NeoMotor {
+public class SimNeoMotor implements NeoMotorIO {
 
     private static final DCMotor motor = DCMotor.getNEO(1);
     private static final double J = 0.00032; // inertia (kg*m^2)

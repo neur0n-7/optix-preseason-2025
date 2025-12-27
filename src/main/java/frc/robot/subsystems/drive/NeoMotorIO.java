@@ -1,6 +1,6 @@
 package frc.robot.subsystems.drive;
 
-public interface NeoMotor {
+public interface NeoMotorIO {
 
     double getVelocity();
 

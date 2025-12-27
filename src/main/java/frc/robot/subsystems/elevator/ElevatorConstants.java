@@ -23,6 +23,8 @@ public class ElevatorConstants {
     public static final double drumDiameter = Units.inchesToMeters(1.5);
     public static final double gearing = 16 * (24.0 / 22.0);
     public static final double carriageMassKg = Units.lbsToKilograms(30);
+    public static final double metersPerMotorRotation = Math.PI * drumDiameter / gearing;
+
 
     public enum ElevatorStates {
         LOWEST(0.0),

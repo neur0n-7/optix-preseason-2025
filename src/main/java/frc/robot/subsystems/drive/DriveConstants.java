@@ -1,5 +1,4 @@
 package frc.robot.subsystems.drive;
-import org.littletonrobotics.junction.Logger;
 
 public class DriveConstants {
 

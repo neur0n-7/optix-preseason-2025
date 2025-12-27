@@ -5,7 +5,7 @@ import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.kinematics.SwerveModuleState;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 
-public class SwerveModuleSim extends SubsystemBase implements SwerveModule {
+public class SwerveModuleSim extends SubsystemBase implements SwerveModuleIO {
 
     // properties
     private double drivePos = 0.0;

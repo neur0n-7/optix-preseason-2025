@@ -2,11 +2,9 @@ package frc.robot.subsystems.elevator;
 
 import edu.wpi.first.wpilibj.simulation.ElevatorSim;
 import edu.wpi.first.math.system.plant.DCMotor;
-import edu.wpi.first.wpilibj.simulation.RoboRioSim;
-import frc.robot.subsystems.drive.NeoMotor;
 import edu.wpi.first.math.MathUtil;
 
-public class SimElevatorMotor implements NeoMotor {
+public class SimElevatorMotor implements ElevatorMotorIO{
 
     private final ElevatorSim sim;
     private double voltage = 0.0;
@@ -30,16 +28,6 @@ public class SimElevatorMotor implements NeoMotor {
     }
 
     @Override
-    public double getBusVoltage() {
-        return RoboRioSim.getVInVoltage();
-    }
-
-    @Override
-    public double getAppliedOutput() {
-        return voltage / 12.0;
-    }
-
-    @Override
     public double getVelocity() {
         return sim.getVelocityMetersPerSecond();
     }
@@ -49,7 +37,6 @@ public class SimElevatorMotor implements NeoMotor {
         return sim.getPositionMeters();
     }
 
-    @Override
     public void updateSimulation(double dtSeconds) {
         sim.update(dtSeconds);
     }

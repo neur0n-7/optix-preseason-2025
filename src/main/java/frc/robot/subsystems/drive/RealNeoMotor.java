@@ -3,7 +3,7 @@ package frc.robot.subsystems.drive;
 import com.revrobotics.spark.SparkLowLevel.MotorType;
 import com.revrobotics.spark.SparkMax;
 
-public class RealNeoMotor implements NeoMotor {
+public class RealNeoMotor implements NeoMotorIO {
 
     private final SparkMax motor;
 

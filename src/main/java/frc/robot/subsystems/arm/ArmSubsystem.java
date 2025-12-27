@@ -185,10 +185,10 @@ public class ArmSubsystem extends SubsystemBase {
         SmartDashboard.putNumber("Arm/Current Degrees", currentDegrees);
         SmartDashboard.putNumber("Arm/Target Degrees", targetPositionDegrees);
 
-        SmartDashboard.putNumber("Elevator/PID Volts", pidVolts);
-        SmartDashboard.putNumber("Elevator/FF Volts", ffVolts);
-        SmartDashboard.putNumber("Elevator/Total Volts", totalVolts);
-        SmartDashboard.putBoolean("Elevator/At Target", atPositionTarget());
+        SmartDashboard.putNumber("Arm/Volts PID", pidVolts);
+        SmartDashboard.putNumber("Arm/Volts FF", ffVolts);
+        SmartDashboard.putNumber("Arm/Volts TOTAL", totalVolts);
+        SmartDashboard.putBoolean("Arm/At Target", atPositionTarget());
 
         SmartDashboard.putNumber("Arm/Velocity (Setpoint)", setpointVelocity);
         SmartDashboard.putNumber("Arm/Velocity (Actual)", actualVelocity);

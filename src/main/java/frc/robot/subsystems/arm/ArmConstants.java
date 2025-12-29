@@ -12,7 +12,7 @@ public class ArmConstants {
     public static final double maxLoadedAccelRads = 2.228;
 
     // PID
-    public static final double kP = 50;
+    public static final double kP = 200;
     public static final double kI = 0;
     public static final double kD = 0;
     public static final double PIDToleranceDegrees = 1.0;
@@ -24,7 +24,7 @@ public class ArmConstants {
     public static final double kVEmpty = 12.0 / maxEmptyVelocityRads;
 
     // public static final double kAEmpty = 12.0 / maxEmptyAccelRads;
-    public static final double kAEmpty = 1.0;
+    public static final double kAEmpty = 0.6;
 
     public static final double kGLoaded = 1.02;
     public static final double kVLoaded = 12.0 / maxLoadedVelocityRads;

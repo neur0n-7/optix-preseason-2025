@@ -222,8 +222,8 @@ public class RobotContainer {
 		}
 
 		if (subsystemEnabled.getOrDefault("ARM", false)) {
-			m_driverController.a().onTrue(m_EjectCone);
-			m_driverController.b().onTrue(m_IntakeCone);
+			m_driverController.a().onTrue(m_IntakeCone);
+			m_driverController.b().onTrue(m_EjectCone);
 			m_driverController.x().onTrue(m_ScoreConeLow);
 			m_driverController.y().onTrue(m_ScoreConeHigh);
 		}

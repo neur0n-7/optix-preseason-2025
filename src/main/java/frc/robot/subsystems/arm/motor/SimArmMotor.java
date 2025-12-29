@@ -21,7 +21,7 @@ public class SimArmMotor implements ArmMotorIO {
                 momentOfInertia,
                 ArmConstants.shoulderLength,
                 Units.degreesToRadians(0),
-                Units.degreesToRadians(20000),
+                Units.degreesToRadians(210),
                 true,
                 Units.degreesToRadians(ArmConstants.ArmPositionStates.STOW.position_degs)
         );
@@ -61,7 +61,7 @@ public class SimArmMotor implements ArmMotorIO {
             momentOfInertia,
             ArmConstants.shoulderLength,
             Units.degreesToRadians(0),
-            Units.degreesToRadians(20000),
+            Units.degreesToRadians(210),
             true,
             currentAngle
         );

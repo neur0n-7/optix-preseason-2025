@@ -6,6 +6,7 @@ package frc.robot;
 
 import frc.robot.Constants.OperatorConstants;
 import frc.robot.commands.Autos;
+import frc.robot.commands.arm.EjectCone;
 import frc.robot.commands.arm.IntakeCone;
 import frc.robot.commands.arm.ScoreCone;
 import edu.wpi.first.math.MathUtil;
@@ -59,6 +60,7 @@ public class RobotContainer {
 
 	// ARM
 	private final ArmSubsystem m_ArmSubsystem;
+	private final EjectCone m_EjectCone;
 	private final IntakeCone m_IntakeCone;
 	private final ScoreCone m_ScoreConeHigh;
 	private final ScoreCone m_ScoreConeLow;
@@ -164,12 +166,14 @@ public class RobotContainer {
 			m_IntakeCone = new IntakeCone(m_ArmSubsystem);
 			m_ScoreConeHigh = new ScoreCone(m_ArmSubsystem, ArmPositionStates.SCORE_HIGH);
 			m_ScoreConeLow = new ScoreCone(m_ArmSubsystem, ArmPositionStates.SCORE_LOW);
+			m_EjectCone = new EjectCone(m_ArmSubsystem);
 			
 		} else {
 			m_ArmSubsystem = null;
 			m_IntakeCone = null;
 			m_ScoreConeHigh = null;
 			m_ScoreConeLow = null;
+			m_EjectCone = null;
 		}
 
 		configureBindings();
@@ -218,7 +222,8 @@ public class RobotContainer {
 		}
 
 		if (subsystemEnabled.getOrDefault("ARM", false)) {
-			m_driverController.a().onTrue(m_IntakeCone);
+			m_driverController.a().onTrue(m_EjectCone);
+			m_driverController.b().onTrue(m_IntakeCone);
 			m_driverController.x().onTrue(m_ScoreConeLow);
 			m_driverController.y().onTrue(m_ScoreConeHigh);
 		}

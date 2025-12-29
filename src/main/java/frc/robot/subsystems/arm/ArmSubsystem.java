@@ -10,6 +10,7 @@ import edu.wpi.first.math.controller.ProfiledPIDController;
 import edu.wpi.first.math.trajectory.TrapezoidProfile;
 import edu.wpi.first.math.util.Units;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
+import edu.wpi.first.wpilibj.util.Color8Bit;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 
 import frc.robot.subsystems.arm.ArmConstants.ArmPositionStates;
@@ -78,11 +79,16 @@ public class ArmSubsystem extends SubsystemBase {
         );
 
         LoggedMechanismRoot2d root = mech.getRoot("arm", 2, 2);
+
+        Color8Bit orange = new Color8Bit(255, 165, 0);
+
         armMech = root.append(
                 new LoggedMechanismLigament2d(
                         "arm",
                         1.5,
-                        0
+                        0,
+                        12,
+                        orange
                 )
         );
 
@@ -90,7 +96,9 @@ public class ArmSubsystem extends SubsystemBase {
             new LoggedMechanismLigament2d(
                 "gripperLeft",
                 0.3,
-                0
+                0,
+                12,
+                orange
             )
         );
 
@@ -98,7 +106,9 @@ public class ArmSubsystem extends SubsystemBase {
             new LoggedMechanismLigament2d(
                 "gripperRight",
                 0.3,
-                0
+                0,
+                12,
+                orange
             )
         ); 
     }

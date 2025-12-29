@@ -48,6 +48,7 @@ public class ArmConstants {
     public enum ArmPositionStates {
         STOW(0.0),
         INTAKE(30.0),
+        EJECT(15.0),
         SCORE_LOW(80.0),
         SCORE_HIGH(110.0);
 

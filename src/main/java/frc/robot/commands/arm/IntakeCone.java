@@ -12,6 +12,9 @@ import frc.robot.subsystems.arm.ArmConstants.CargoStates;
 public class IntakeCone extends SequentialCommandGroup {
 
     public IntakeCone(ArmSubsystem arm) {
+
+        addRequirements(arm);
+
         addCommands(
             new ConditionalCommand(
 

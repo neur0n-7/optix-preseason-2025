@@ -14,18 +14,24 @@ public class ScoreCone extends SequentialCommandGroup {
         
         addCommands(
             // stow > high
+            new InstantCommand(() -> System.out.println("Started score cone sequence (%s)".formatted(scoreTargetState.toString()))),
             new InstantCommand(() -> arm.setTargetPositionState(scoreTargetState)),
+            new InstantCommand(() -> System.out.println("Started stow > target state (%s)".formatted(scoreTargetState.toString()))),
             new WaitUntilCommand(() -> arm.atPositionTarget()),
 
             // open gripper
             new InstantCommand(() -> arm.setGripperState(GripperStates.OPEN)),
+            new InstantCommand(() -> System.out.println("Opened gripper")),
 
             // set cargo to empty
             new InstantCommand(() -> arm.setCargoState(CargoStates.EMPTY)),
+            new InstantCommand(() -> System.out.println("Updated cargo state to empty")),
 
             // high > stow
             new InstantCommand(() -> arm.setTargetPositionState(ArmPositionStates.STOW)),
-            new WaitUntilCommand(() -> arm.atPositionTarget())
+            new InstantCommand(() -> System.out.println("Started target state (%s) > stow".formatted(scoreTargetState.toString()))),
+            new WaitUntilCommand(() -> arm.atPositionTarget()),
+            new InstantCommand(() -> System.out.println("Score cone finished"))
         );
     }
 }

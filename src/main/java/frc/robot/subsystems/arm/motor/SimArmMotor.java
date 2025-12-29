@@ -21,7 +21,7 @@ public class SimArmMotor implements ArmMotorIO {
                 momentOfInertia,
                 ArmConstants.shoulderLength,
                 Units.degreesToRadians(0),
-                Units.degreesToRadians(180),
+                Units.degreesToRadians(20000),
                 true,
                 Units.degreesToRadians(ArmConstants.ArmPositionStates.STOW.position_degs)
         );
@@ -34,7 +34,7 @@ public class SimArmMotor implements ArmMotorIO {
     }
 
     @Override
-    public double getVelocity() {
+    public double getVelocityRadPerSec() {
         return sim.getVelocityRadPerSec();
     }
 
@@ -47,7 +47,7 @@ public class SimArmMotor implements ArmMotorIO {
         sim.update(dtSeconds);
     }
 
-    public void setArmMass(boolean hasCone) {
+    public void setSimArmMass(boolean hasCone) {
         double armMass = hasCone ? ArmConstants.totalLoadedArmMassKg : ArmConstants.totalEmptyArmMassKg;
         double momentOfInertia = armMass * Math.pow(ArmConstants.shoulderLength, 2);
     
@@ -61,7 +61,7 @@ public class SimArmMotor implements ArmMotorIO {
             momentOfInertia,
             ArmConstants.shoulderLength,
             Units.degreesToRadians(0),
-            Units.degreesToRadians(180),
+            Units.degreesToRadians(20000),
             true,
             currentAngle
         );

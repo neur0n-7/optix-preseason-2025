@@ -3,6 +3,7 @@ package frc.robot.subsystems.arm.motor;
 import com.revrobotics.RelativeEncoder;
 import com.revrobotics.spark.SparkLowLevel.MotorType;
 
+import edu.wpi.first.math.util.Units;
 import frc.robot.subsystems.arm.ArmConstants;
 
 import com.revrobotics.spark.SparkMax;
@@ -24,9 +25,11 @@ public class RealArmMotor implements ArmMotorIO {
     }
 
     @Override
-    public double getVelocity() {
+    public double getVelocityRadPerSec() {
         // Returns degrees per second
-        return encoder.getVelocity() * 360.0 / ArmConstants.gearing;
+        double motorRpm = encoder.getVelocity();
+        double armDegreesPerMin = motorRpm * 360.0 / ArmConstants.gearing;
+        return Units.degreesToRadians(armDegreesPerMin / 60) ;
     }
 
     @Override

@@ -1,6 +1,7 @@
 package frc.robot.commands.arm;
 
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
+import edu.wpi.first.wpilibj2.command.ConditionalCommand;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.WaitUntilCommand;
 import frc.robot.subsystems.arm.ArmSubsystem;
@@ -12,19 +13,41 @@ public class IntakeCone extends SequentialCommandGroup {
 
     public IntakeCone(ArmSubsystem arm) {
         addCommands(
-            // stow > intake
-            new InstantCommand(() -> arm.setTargetPositionState(ArmPositionStates.INTAKE)),
-            new WaitUntilCommand(() -> arm.atPositionTarget()),
+            new ConditionalCommand(
 
-            // close gripper
-            new InstantCommand(() -> arm.setGripperState(GripperStates.CLOSED)),
+                // Cargo is empty
+                new SequentialCommandGroup(
 
-            // set cargo to loaded
-            new InstantCommand(() -> arm.setCargoState(CargoStates.LOADED)),
+                    // stow > intake
+                    new InstantCommand(() -> System.out.println("Started cone intake sequence")),
+                    new InstantCommand(() -> arm.setGripperState(GripperStates.OPEN)),
+                    new InstantCommand(() -> System.out.println("Opened gripper")),
+                    new InstantCommand(() -> arm.setTargetPositionState(ArmPositionStates.INTAKE)),
+                    new InstantCommand(() -> System.out.println("Started stow > intake")),
+                    new WaitUntilCommand(() -> arm.atPositionTarget()),
 
-            // high > stow
-            new InstantCommand(() -> arm.setTargetPositionState(ArmPositionStates.STOW)),
-            new WaitUntilCommand(() -> arm.atPositionTarget())
+                    // close gripper
+                    new InstantCommand(() -> arm.setGripperState(GripperStates.CLOSED)),
+                    new InstantCommand(() -> System.out.println("Closed gripper")),
+
+                    // set cargo to loaded
+                    new InstantCommand(() -> arm.setCargoState(CargoStates.LOADED)),
+                    new InstantCommand(() -> System.out.println("Updated cargo state to loaded")),
+
+                    // high > stow
+                    new InstantCommand(() -> arm.setTargetPositionState(ArmPositionStates.STOW)),
+                    new InstantCommand(() -> System.out.println("Started intake > stow")),
+                    new WaitUntilCommand(() -> arm.atPositionTarget()),
+                    new InstantCommand(() -> System.out.println("Cone intake finished"))
+                ),
+
+                // Cargo is loaded
+                new InstantCommand(() -> System.out.println("IntakeCone skipped: cargo already loaded")),
+
+                // Condition
+                () -> arm.getCargoState() == CargoStates.EMPTY
+
+            )
         );
     }
 }

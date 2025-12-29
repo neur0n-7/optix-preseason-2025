@@ -5,28 +5,32 @@ import edu.wpi.first.math.util.Units;
 public class ArmConstants {
 
     // Constraints
-    public static final double maxEmptyVelocity = 5.386;
-    public static final double maxEmptyAccel = 183.140;
+    public static final double maxEmptyVelocityRads = 5.387;
+    public static final double maxEmptyAccelRads = 1.746;
     
-    public static final double maxLoadedVelocity = 5.467;
-    public static final double maxLoadedAccel = 163.317;
+    public static final double maxLoadedVelocityRads = 5.469;
+    public static final double maxLoadedAccelRads = 2.228;
 
     // PID
-    public static final double kP = 0;
+    public static final double kP = 50;
     public static final double kI = 0;
     public static final double kD = 0;
-    public static final double PIDTolerance = 1.0;
+    public static final double PIDToleranceDegrees = 1.0;
 
     // FeedForward
     public static final double kS = 0.0;
 
     public static final double kGEmpty = 0.82;
-    public static final double kVEmpty = 12.0 / maxEmptyVelocity;
-    public static final double kAEmpty = 12.0 / maxEmptyAccel;
+    public static final double kVEmpty = 12.0 / maxEmptyVelocityRads;
+
+    // public static final double kAEmpty = 12.0 / maxEmptyAccelRads;
+    public static final double kAEmpty = 1.0;
 
     public static final double kGLoaded = 1.02;
-    public static final double kVLoaded = 12.0 / maxLoadedVelocity;
-    public static final double kALoaded = 12.0 / maxLoadedAccel;
+    public static final double kVLoaded = 12.0 / maxLoadedVelocityRads;
+    // public static final double kALoaded = 12.0 / maxLoadedAccelRads;
+    public static final double kALoaded = 0.4;
+
 
     // Specs
     public static final double gearing = 120.0;

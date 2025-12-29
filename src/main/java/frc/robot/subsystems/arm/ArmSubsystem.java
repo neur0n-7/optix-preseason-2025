@@ -1,6 +1,8 @@
 package frc.robot.subsystems.arm;
 
-import org.littletonrobotics.junction.mechanism.*;
+import org.littletonrobotics.junction.mechanism.LoggedMechanism2d;
+import org.littletonrobotics.junction.mechanism.LoggedMechanismLigament2d;
+import org.littletonrobotics.junction.mechanism.LoggedMechanismRoot2d;
 
 import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.math.controller.ArmFeedforward;
@@ -9,6 +11,7 @@ import edu.wpi.first.math.trajectory.TrapezoidProfile;
 import edu.wpi.first.math.util.Units;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
+
 import frc.robot.subsystems.arm.ArmConstants.ArmPositionStates;
 import frc.robot.subsystems.arm.ArmConstants.CargoStates;
 import frc.robot.subsystems.arm.ArmConstants.GripperStates;
@@ -27,7 +30,7 @@ public class ArmSubsystem extends SubsystemBase {
     private final ArmFeedforward loadedFeedforward;
     
     private double lastSetpointVelocity = 0.0;
-    private double lastActualVelocity = 0.0;
+    private double lastActualVelocityRads = 0.0;
     private double targetPositionDegrees = 0.0;
     
     // states
@@ -39,7 +42,7 @@ public class ArmSubsystem extends SubsystemBase {
     private final LoggedMechanismLigament2d gripperLeft;
     private final LoggedMechanismLigament2d gripperRight;
     
-
+    private double timeElapsed = 0.0;
 
     public ArmSubsystem(ArmMotorIO motor, GripperIO gripper) {
         this.armMotor = motor;
@@ -50,13 +53,17 @@ public class ArmSubsystem extends SubsystemBase {
                 ArmConstants.kI,
                 ArmConstants.kD,
                 new TrapezoidProfile.Constraints(
-                    ArmConstants.maxEmptyVelocity,
-                    ArmConstants.maxEmptyAccel
+                    ArmConstants.maxEmptyVelocityRads,
+                    ArmConstants.maxEmptyAccelRads
                 )
         );
 
-        pidController.setTolerance(ArmConstants.PIDTolerance);
+        lastSetpointVelocity = pidController.getSetpoint().velocity;
 
+
+        pidController.setTolerance(Units.degreesToRadians(ArmConstants.PIDToleranceDegrees));
+
+        // FF for arm when not holding cone
         emptyFeedforward = new ArmFeedforward(
                 ArmConstants.kS,
                 ArmConstants.kGEmpty,
@@ -64,6 +71,7 @@ public class ArmSubsystem extends SubsystemBase {
                 ArmConstants.kAEmpty
         );
 
+        // FF for arm when holding cone
         loadedFeedforward = new ArmFeedforward(
             ArmConstants.kS,
             ArmConstants.kGLoaded,
@@ -94,37 +102,38 @@ public class ArmSubsystem extends SubsystemBase {
                 0.3,
                 0
             )
-        );
-
-        
+        ); 
     }
 
-    // state setters
+    // Set the target POSITION state of the arm e.g. ArmPositionStates.STOW
     public void setTargetPositionState(ArmPositionStates targetPositionState) {
-        pidController.setGoal(targetPositionState.position_degs);
+        pidController.setGoal(Units.degreesToRadians(targetPositionState.position_degs));
         targetPositionDegrees = targetPositionState.position_degs;
         currentPositionState = targetPositionState;
     }
 
-    public void setGripperState(GripperStates targetGripperState){
-        gripper.setGripperState(targetGripperState);
+    // Set the gripper state to open/closed
+    public void setGripperState(GripperStates gripperState){
+        gripper.setGripperState(gripperState);
     }
 
-    public void setCargoState(CargoStates targetCargoState){
-        gripper.setCargoState(targetCargoState);
-        armMotor.setArmMass(targetCargoState.isHoldingCone);
+    // Set the cargo state to empty/loaded
+    public void setCargoState(CargoStates cargoState){
+        gripper.setCargoState(cargoState);
+        armMotor.setSimArmMass(cargoState.isHoldingCone);
     }
 
-    // getters
+    // Return whether or not the arm is at the target position (degrees)
     public boolean atPositionTarget() {
         return pidController.atGoal();
     }
 
+    // Get the current position of the arm in degrees
     public double getPositionDegrees() {
         return armMotor.getPositionDegrees();
     }
 
-    // state getters
+    // State getters
     public ArmPositionStates getPositionState() {
         return currentPositionState;
     }
@@ -137,51 +146,55 @@ public class ArmSubsystem extends SubsystemBase {
         return gripper.getCargoState();
     }
 
-    // IO stuff
+    // Set the voltage of the arm motor
     public void setMotorVoltage(double volts){
         armMotor.setVoltage(MathUtil.clamp(volts, -12, 12));
     }
 
-    public void updateMechanism(){
-        double armAngleDegrees = getPositionDegrees();
-
-        // 0 degrees in the mech points right, it should point down
-        armMech.setAngle(armAngleDegrees - 90);
-
-        double clawAngle = gripper.getGripperState() == GripperStates.OPEN ? 60.0 : 10.0;
-        gripperLeft.setAngle(-clawAngle);
-        gripperRight.setAngle(clawAngle);
-
-    }
-
     @Override
     public void periodic() {
-                
-        double currentDegrees = getPositionDegrees();
 
+        timeElapsed += 0.02;
+                
         TrapezoidProfile.State setpoint = pidController.getSetpoint();
 
+        // Setpoint velocity/acceleration
         double setpointVelocity = setpoint.velocity;
         double setpointAcceleration = (setpointVelocity - lastSetpointVelocity) / 0.02;
         lastSetpointVelocity = setpointVelocity;
 
-        double actualVelocity = armMotor.getVelocity();
-        double actualAcceleration = (actualVelocity - lastActualVelocity) / 0.02;
-        lastActualVelocity = actualVelocity;
+        // Actual velocity/acceleration
+        boolean holdingCone = gripper.getCargoState().isHoldingCone;
+        double maxAccel = holdingCone ? ArmConstants.maxLoadedAccelRads : ArmConstants.maxEmptyAccelRads;
+        double maxVel   = holdingCone ? ArmConstants.maxLoadedVelocityRads : ArmConstants.maxEmptyVelocityRads;
+        double actualVelocityRads = MathUtil.clamp(armMotor.getVelocityRadPerSec(), -maxVel, maxVel);
+        double actualAccelerationRads = MathUtil.clamp((actualVelocityRads - lastActualVelocityRads) / 0.02, -maxAccel, maxAccel);
+        lastActualVelocityRads = actualVelocityRads;
 
-        double pidVolts = pidController.calculate(currentDegrees);
+        // PID
+        double currentDegrees = getPositionDegrees();
+        double currentRadians = Units.degreesToRadians(currentDegrees);
+        double pidVolts = MathUtil.clamp(pidController.calculate(currentRadians), -12, 12);
 
+        // FF
         double ffVolts;
-        if (gripper.getCargoState().isHoldingCone){
-            ffVolts = loadedFeedforward.calculate(Units.radiansToDegrees(getPositionDegrees()), setpointVelocity, setpointAcceleration);
+        if (holdingCone){
+            ffVolts = loadedFeedforward.calculate(Units.degreesToRadians(getPositionDegrees() - 90), setpointVelocity, setpointAcceleration);
         } else {
-            ffVolts = emptyFeedforward.calculate(Units.radiansToDegrees(getPositionDegrees()), setpointVelocity, setpointAcceleration);
+            ffVolts = emptyFeedforward.calculate(Units.degreesToRadians(getPositionDegrees() - 90), setpointVelocity, setpointAcceleration);
         }
+        ffVolts = MathUtil.clamp(ffVolts, -12, 12);
 
+
+        // Send total voltage to arm motor
         double totalVolts = MathUtil.clamp(pidVolts + ffVolts, -12, 12);
-        
         setMotorVoltage(totalVolts);
-
+/*
+        if (timeElapsed > 1){
+            setCargoState(CargoStates.LOADED);
+            setMotorVoltage(12);
+        }
+ */
         SmartDashboard.putNumber("Arm/Current Degrees", currentDegrees);
         SmartDashboard.putNumber("Arm/Target Degrees", targetPositionDegrees);
 
@@ -191,15 +204,47 @@ public class ArmSubsystem extends SubsystemBase {
         SmartDashboard.putBoolean("Arm/At Target", atPositionTarget());
 
         SmartDashboard.putNumber("Arm/Velocity (Setpoint)", setpointVelocity);
-        SmartDashboard.putNumber("Arm/Velocity (Actual)", actualVelocity);
+        SmartDashboard.putNumber("Arm/Velocity (Actual)", actualVelocityRads);
         SmartDashboard.putNumber("Arm/Acceleration (Setpoint)", setpointAcceleration);
-        SmartDashboard.putNumber("Arm/Acceleration (Actual)", actualAcceleration);
+        SmartDashboard.putNumber("Arm/Acceleration (Actual)", actualAccelerationRads);
 
         SmartDashboard.putData("Arm/Mech2d", mech);
 
         SmartDashboard.putString("Arm/Position State", getPositionState().toString());
         SmartDashboard.putString("Arm/Gripper State", getGripperState().toString());
         SmartDashboard.putString("Arm/Cargo State", getCargoState().toString());
+
+        if (timeElapsed % 0.06 < 1e-6) {
+
+            System.out.println(String.format(
+                "Arm | Cur=%.2f deg Tar=%.2f deg At=%b | PID=%.2fV FF=%.2fV Tot=%.2fV | VelSP=%.2f VelAct=%.2f | AccSP=%.2f AccAct=%.2f | Pos=%s Cargo=%s",
+                currentDegrees,
+                targetPositionDegrees,
+                atPositionTarget(),
+                pidVolts,
+                ffVolts,
+                totalVolts,
+                setpointVelocity,
+                actualVelocityRads,
+                setpointAcceleration,
+                actualAccelerationRads,
+                getPositionState(),
+                getCargoState()
+            ));
+        }
+    }
+
+    // Update the LoggedMechanism2d
+    public void updateMechanism(){
+        double armAngleDegrees = getPositionDegrees();
+
+        // Currently angles are stored with 0 degrees pointing down.
+        // However, 0 degrees in Mechanism2ds points right
+        armMech.setAngle(armAngleDegrees - 90);
+
+        double clawAngle = gripper.getGripperState() == GripperStates.OPEN ? 60.0 : 10.0;
+        gripperLeft.setAngle(-clawAngle);
+        gripperRight.setAngle(clawAngle);
 
     }
 
